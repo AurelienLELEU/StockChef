@@ -1,0 +1,5 @@
+Locale: fr-FR
+Source build: Debug simulator build of StockChef, Xcode scheme StockChef
+
+01-tableau-de-bord.png | 1206x2622 | iPhone 18 Pro simulator | real in-app dashboard with seeded local demo inventory
+02-onboarding-confidentialite.png | 1206x2622 | iPhone 18 Pro simulator | real first-run privacy onboarding

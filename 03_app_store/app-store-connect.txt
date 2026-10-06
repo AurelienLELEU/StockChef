@@ -1,0 +1,32 @@
+Locale: French (France)
+
+App Name: StockChef
+Subtitle: Votre frigo, vos recettes, hors-ligne
+Promotional Text: Scannez vos courses, cuisinez ce que vous avez et réduisez le gaspillage — sans compte, sans publicité et sans cloud.
+Description:
+StockChef transforme vos tickets de caisse en inventaire local et vous propose des recettes adaptées à ce que vous avez déjà.
+
+• Analyse des tickets sur votre iPhone, même hors connexion
+• Inventaire par frigo, congélateur et placard
+• Alertes pour les aliments à utiliser bientôt
+• Recettes anti-gaspi ajustées au nombre de convives
+• Planning de repas et liste de courses locale
+• Sauvegarde JSON, avec option chiffrée par mot de passe
+• Aucune publicité, aucun compte et aucune donnée de cuisine envoyée au cloud
+
+StockChef vous laisse toujours vérifier les produits détectés avant de les ajouter. Vérifiez les étiquettes, dates et consignes de sécurité alimentaire de vos produits avant consommation.
+
+Keywords: anti gaspi,frigo,recettes,scanner ticket,courses,inventaire,local,hors ligne,zero dechet
+What’s New: Première version de StockChef : scan local de tickets, inventaire intelligent, recettes anti-gaspi, planning et sauvegarde chiffrée.
+Primary Category: Food & Drink
+Secondary Category: Lifestyle
+Support URL: [[OWNER INPUT: URL publique de support BTBU]]
+Marketing URL: [[OWNER INPUT: URL publique de présentation de StockChef, ou laisser vide]]
+Privacy Policy URL: [[OWNER INPUT: URL publique de la politique de confidentialité BTBU]]
+Copyright: © 2026 BTBU
+Age Rating: [[OWNER INPUT: renseigner le questionnaire App Store Connect ; l’app ne contient pas de contenu sensible connu]]
+App Privacy: No data collected by the app or by third-party SDKs; no tracking. Apple purchase processing is handled by Apple.
+App Access: No account required.
+Notes for Review: Les tickets sont analysés avec Vision sur l’appareil. Les achats intégrés sont optionnels. L’app ne transmet pas les tickets ni l’inventaire à un serveur.
+Export Compliance: Uses standard Apple CryptoKit encryption only for user-initiated local backup files. [[OWNER INPUT: confirmer le questionnaire Export Compliance dans App Store Connect]]
+Availability and Pricing: Free download; optional consumable scan pack and non-consumable Pro Lifetime purchase.

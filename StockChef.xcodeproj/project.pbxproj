@@ -1,0 +1,437 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 71;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A00000000000000000000001 /* StockChefApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000101 /* StockChefApp.swift */; };
+		A00000000000000000000002 /* InventoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000102 /* InventoryStore.swift */; };
+		A00000000000000000000003 /* LicenseStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000103 /* LicenseStore.swift */; };
+		A00000000000000000000004 /* ReceiptScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000104 /* ReceiptScanner.swift */; };
+		A00000000000000000000005 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000105 /* ContentView.swift */; };
+		A00000000000000000000006 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000106 /* InventoryView.swift */; };
+		A00000000000000000000007 /* RecipesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000107 /* RecipesView.swift */; };
+		A00000000000000000000008 /* ScanReceiptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000108 /* ScanReceiptView.swift */; };
+		A00000000000000000000009 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000109 /* SettingsView.swift */; };
+		A00000000000000000000010 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000201 /* Models.swift */; };
+		A00000000000000000000011 /* RecipeMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000202 /* RecipeMatcher.swift */; };
+		A00000000000000000000012 /* ReceiptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000203 /* ReceiptParser.swift */; };
+		A00000000000000000000013 /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000204 /* Backup.swift */; };
+		A00000000000000000000014 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000205 /* SampleData.swift */; };
+		A00000000000000000000015 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000110 /* Assets.xcassets */; };
+		A00000000000000000000016 /* SQLiteInventoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000111 /* SQLiteInventoryRepository.swift */; };
+		A00000000000000000000017 /* ExpiryNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000112 /* ExpiryNotificationManager.swift */; };
+		A00000000000000000000018 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000113 /* PurchaseManager.swift */; };
+		A00000000000000000000019 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000114 /* CameraPicker.swift */; };
+		A00000000000000000000020 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A00000000000000000000115 /* libsqlite3.tbd */; };
+		A00000000000000000000021 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000116 /* OnboardingView.swift */; };
+		A00000000000000000000022 /* EncryptedBackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000117 /* EncryptedBackupService.swift */; };
+		A00000000000000000000023 /* InformationViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000118 /* InformationViews.swift */; };
+		A00000000000000000000024 /* StockChefUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000119 /* StockChefUITests.swift */; };
+		A00000000000000000000025 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000120 /* PrivacyInfo.xcprivacy */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A00000000000000000001002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000701 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000601;
+			remoteInfo = StockChef;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A00000000000000000000101 /* StockChefApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockChefApp.swift; sourceTree = "<group>"; };
+		A00000000000000000000102 /* InventoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryStore.swift; sourceTree = "<group>"; };
+		A00000000000000000000103 /* LicenseStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseStore.swift; sourceTree = "<group>"; };
+		A00000000000000000000104 /* ReceiptScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptScanner.swift; sourceTree = "<group>"; };
+		A00000000000000000000105 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A00000000000000000000106 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
+		A00000000000000000000107 /* RecipesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesView.swift; sourceTree = "<group>"; };
+		A00000000000000000000108 /* ScanReceiptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanReceiptView.swift; sourceTree = "<group>"; };
+		A00000000000000000000109 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A00000000000000000000110 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A00000000000000000000111 /* SQLiteInventoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteInventoryRepository.swift; sourceTree = "<group>"; };
+		A00000000000000000000112 /* ExpiryNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiryNotificationManager.swift; sourceTree = "<group>"; };
+		A00000000000000000000113 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		A00000000000000000000114 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
+		A00000000000000000000115 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		A00000000000000000000116 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		A00000000000000000000117 /* EncryptedBackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptedBackupService.swift; sourceTree = "<group>"; };
+		A00000000000000000000118 /* InformationViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViews.swift; sourceTree = "<group>"; };
+		A00000000000000000000119 /* StockChefUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockChefUITests.swift; sourceTree = "<group>"; };
+		A00000000000000000000120 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		A00000000000000000000201 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		A00000000000000000000202 /* RecipeMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeMatcher.swift; sourceTree = "<group>"; };
+		A00000000000000000000203 /* ReceiptParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptParser.swift; sourceTree = "<group>"; };
+		A00000000000000000000204 /* Backup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backup.swift; sourceTree = "<group>"; };
+		A00000000000000000000205 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
+		A00000000000000000000301 /* StockChef.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StockChef.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000302 /* StockChefUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StockChefUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A00000000000000000000401 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000020 /* libsqlite3.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000405 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A00000000000000000000501 = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000502 /* StockChefApp */,
+				A00000000000000000000503 /* Sources/StockChefCore */,
+				A00000000000000000000505 /* StockChefUITests */,
+				A00000000000000000000504 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A00000000000000000000502 /* StockChefApp */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000101 /* StockChefApp.swift */,
+				A00000000000000000000102 /* InventoryStore.swift */,
+				A00000000000000000000103 /* LicenseStore.swift */,
+				A00000000000000000000104 /* ReceiptScanner.swift */,
+				A00000000000000000000105 /* ContentView.swift */,
+				A00000000000000000000106 /* InventoryView.swift */,
+				A00000000000000000000107 /* RecipesView.swift */,
+				A00000000000000000000108 /* ScanReceiptView.swift */,
+				A00000000000000000000109 /* SettingsView.swift */,
+				A00000000000000000000110 /* Assets.xcassets */,
+				A00000000000000000000111 /* SQLiteInventoryRepository.swift */,
+				A00000000000000000000112 /* ExpiryNotificationManager.swift */,
+				A00000000000000000000113 /* PurchaseManager.swift */,
+				A00000000000000000000114 /* CameraPicker.swift */,
+				A00000000000000000000116 /* OnboardingView.swift */,
+				A00000000000000000000117 /* EncryptedBackupService.swift */,
+				A00000000000000000000118 /* InformationViews.swift */,
+				A00000000000000000000120 /* PrivacyInfo.xcprivacy */,
+			);
+			path = StockChefApp;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000503 /* Sources/StockChefCore */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000201 /* Models.swift */,
+				A00000000000000000000202 /* RecipeMatcher.swift */,
+				A00000000000000000000203 /* ReceiptParser.swift */,
+				A00000000000000000000204 /* Backup.swift */,
+				A00000000000000000000205 /* SampleData.swift */,
+			);
+			path = Sources/StockChefCore;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000504 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000301 /* StockChef.app */,
+				A00000000000000000000302 /* StockChefUITests.xctest */,
+				A00000000000000000000115 /* libsqlite3.tbd */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000505 /* StockChefUITests */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000119 /* StockChefUITests.swift */,
+			);
+			path = StockChefUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A00000000000000000000601 /* StockChef */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000901 /* Build configuration list for PBXNativeTarget "StockChef" */;
+			buildPhases = (
+				A00000000000000000000403 /* Sources */,
+				A00000000000000000000401 /* Frameworks */,
+				A00000000000000000000402 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StockChef;
+			productName = StockChef;
+			productReference = A00000000000000000000301 /* StockChef.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A00000000000000000000602 /* StockChefUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000903 /* Build configuration list for PBXNativeTarget "StockChefUITests" */;
+			buildPhases = (
+				A00000000000000000000404 /* Sources */,
+				A00000000000000000000405 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A00000000000000000001001 /* PBXTargetDependency */,
+			);
+			name = StockChefUITests;
+			productName = StockChefUITests;
+			productReference = A00000000000000000000302 /* StockChefUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A00000000000000000000701 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					A00000000000000000000601 = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					A00000000000000000000602 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = A00000000000000000000601;
+					};
+				};
+			};
+			buildConfigurationList = A00000000000000000000902 /* Build configuration list for PBXProject "StockChef" */;
+			compatibilityVersion = "Xcode 16.0";
+			developmentRegion = fr;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				fr,
+				Base,
+			);
+			mainGroup = A00000000000000000000501;
+			productRefGroup = A00000000000000000000504 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A00000000000000000000601 /* StockChef */,
+				A00000000000000000000602 /* StockChefUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A00000000000000000000402 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000015 /* Assets.xcassets in Resources */,
+				A00000000000000000000025 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A00000000000000000000403 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000001 /* StockChefApp.swift in Sources */,
+				A00000000000000000000002 /* InventoryStore.swift in Sources */,
+				A00000000000000000000003 /* LicenseStore.swift in Sources */,
+				A00000000000000000000004 /* ReceiptScanner.swift in Sources */,
+				A00000000000000000000005 /* ContentView.swift in Sources */,
+				A00000000000000000000006 /* InventoryView.swift in Sources */,
+				A00000000000000000000007 /* RecipesView.swift in Sources */,
+				A00000000000000000000008 /* ScanReceiptView.swift in Sources */,
+				A00000000000000000000009 /* SettingsView.swift in Sources */,
+				A00000000000000000000010 /* Models.swift in Sources */,
+				A00000000000000000000011 /* RecipeMatcher.swift in Sources */,
+				A00000000000000000000012 /* ReceiptParser.swift in Sources */,
+				A00000000000000000000013 /* Backup.swift in Sources */,
+				A00000000000000000000014 /* SampleData.swift in Sources */,
+				A00000000000000000000016 /* SQLiteInventoryRepository.swift in Sources */,
+				A00000000000000000000017 /* ExpiryNotificationManager.swift in Sources */,
+				A00000000000000000000018 /* PurchaseManager.swift in Sources */,
+				A00000000000000000000019 /* CameraPicker.swift in Sources */,
+				A00000000000000000000021 /* OnboardingView.swift in Sources */,
+				A00000000000000000000022 /* EncryptedBackupService.swift in Sources */,
+				A00000000000000000000023 /* InformationViews.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000404 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000024 /* StockChefUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A00000000000000000001001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000601 /* StockChef */;
+			targetProxy = A00000000000000000001002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A00000000000000000000801 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				ORGANIZATIONNAME = BTBU;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A00000000000000000000802 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				ORGANIZATIONNAME = BTBU;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A00000000000000000000811 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z96C46ARXW;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = StockChefApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.stockchef.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A00000000000000000000812 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = Z96C46ARXW;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = StockChefApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.stockchef.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A00000000000000000000813 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.btbu.stockchef.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = StockChef;
+			};
+			name = Debug;
+		};
+		A00000000000000000000814 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				PRODUCT_BUNDLE_IDENTIFIER = fr.btbu.stockchef.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = StockChef;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A00000000000000000000901 /* Build configuration list for PBXNativeTarget "StockChef" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000811 /* Debug */,
+				A00000000000000000000812 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000902 /* Build configuration list for PBXProject "StockChef" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000801 /* Debug */,
+				A00000000000000000000802 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000903 /* Build configuration list for PBXNativeTarget "StockChefUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000813 /* Debug */,
+				A00000000000000000000814 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A00000000000000000000701 /* Project object */;
+}
