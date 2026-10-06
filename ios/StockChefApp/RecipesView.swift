@@ -8,7 +8,7 @@ struct RecipesView: View {
     @State private var courseFilter: RecipeCourse?
 
     private var matches: [RecipeMatch] {
-        RecipeMatcher.matches(recipes: SampleData.recipes, inventory: store.items, servings: servings)
+        RecipeMatcher.matches(recipes: store.recipes, inventory: store.items, servings: servings)
             .filter { dietaryFilter == nil || $0.recipe.dietaryTags.contains(dietaryFilter!) }
             .filter { $0.recipe.allergens.isDisjoint(with: excludedAllergens) }
             .filter { courseFilter == nil || $0.recipe.course == courseFilter }

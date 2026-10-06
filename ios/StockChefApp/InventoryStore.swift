@@ -5,11 +5,18 @@ final class InventoryStore: ObservableObject {
     @Published private(set) var items: [InventoryItem] = []
     @Published private(set) var shoppingList: [ShoppingItem] = []
     @Published private(set) var mealPlan: [MealPlanEntry] = []
+    @Published private(set) var recipes: [Recipe] = SampleData.recipes
     @Published var license: AppLicense
     @Published var lastError: String?
 
     private var repository: SQLiteInventoryRepository?
     private let licenseStore = LicenseStore()
+    private var recipeRefreshInFlight = false
+    private var lastRecipeAttempt = Date.distantPast
+    private let recipeEndpoint = URL(string: "https://btbu.aurelienleleu.fr/stockchef/recipes.json")!
+    private var recipeCacheURL: URL {
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0].appendingPathComponent("stockchef-recipes-v1.json")
+    }
 
     init() {
         license = licenseStore.load()
@@ -18,6 +25,32 @@ final class InventoryStore: ObservableObject {
         #endif
         do { repository = try SQLiteInventoryRepository(); load(); seedDemoIfRequested() }
         catch { lastError = error.localizedDescription }
+        if let size = try? recipeCacheURL.resourceValues(forKeys: [.fileSizeKey]).fileSize,
+           size <= RecipeFeedCodec.maximumBytes,
+           let data = try? Data(contentsOf: recipeCacheURL),
+           let cached = try? RecipeFeedCodec.decode(data) { recipes = cached }
+    }
+
+    func refreshRecipes() async {
+        guard !recipeRefreshInFlight, Date().timeIntervalSince(lastRecipeAttempt) >= 900 else { return }
+        recipeRefreshInFlight = true
+        lastRecipeAttempt = Date()
+        defer { recipeRefreshInFlight = false }
+        do {
+            var request = URLRequest(url: recipeEndpoint, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+            let (bytes, response) = try await URLSession.shared.bytes(for: request)
+            guard let http = response as? HTTPURLResponse, http.statusCode == 200,
+                  http.url == recipeEndpoint, http.expectedContentLength <= RecipeFeedCodec.maximumBytes else { return }
+            var data = Data()
+            for try await byte in bytes {
+                guard data.count < RecipeFeedCodec.maximumBytes else { return }
+                data.append(byte)
+            }
+            let updated = try RecipeFeedCodec.decode(data)
+            try data.write(to: recipeCacheURL, options: .atomic)
+            recipes = updated
+        } catch { }
     }
 
     var expiringItems: [InventoryItem] {

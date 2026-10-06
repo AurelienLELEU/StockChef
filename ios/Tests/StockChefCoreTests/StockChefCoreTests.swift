@@ -2,6 +2,17 @@ import XCTest
 @testable import StockChefCore
 
 final class StockChefCoreTests: XCTestCase {
+    func testRecipeFeedAcceptsCatalogAndRejectsInvalidUpdates() throws {
+        let recipes = SampleData.recipes
+        let encoder = JSONEncoder()
+        XCTAssertEqual(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(recipes: recipes))), recipes)
+        XCTAssertThrowsError(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(schemaVersion: 2, recipes: recipes))))
+        XCTAssertThrowsError(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(recipes: []))))
+        XCTAssertThrowsError(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(recipes: [recipes[0], recipes[0]]))))
+        var invalid = recipes[0]
+        invalid.baseServings = 0
+        XCTAssertThrowsError(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(recipes: [invalid]))))
+    }
     func testRecipeScalesAndDebitsInventory() {
         let recipe = Recipe(title: "Test", baseServings: 2, prepTimeMinutes: 1, instructions: [], ingredients: [RecipeIngredient(name: "Tomates", baseQuantity: 100, unit: .gram)])
         let initial = [InventoryItem(name: "Tomates", category: .vegetable, quantity: 300, unit: .gram)]

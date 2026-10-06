@@ -23,7 +23,7 @@ struct DashboardView: View {
     @EnvironmentObject private var store: InventoryStore
     @State private var showScanner = false
 
-    private var bestMatch: RecipeMatch? { RecipeMatcher.matches(recipes: SampleData.recipes, inventory: store.items, servings: 2).first }
+    private var bestMatch: RecipeMatch? { RecipeMatcher.matches(recipes: store.recipes, inventory: store.items, servings: 2).first }
 
     var body: some View {
         NavigationStack {

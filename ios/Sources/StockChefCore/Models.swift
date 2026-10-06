@@ -185,6 +185,41 @@ public enum RecipeCourse: String, CaseIterable, Codable, Sendable {
     case snack = "Encas & à emporter"
 }
 
+public struct RecipeFeed: Codable, Sendable {
+    public var schemaVersion: Int
+    public var recipes: [Recipe]
+
+    public init(schemaVersion: Int = 1, recipes: [Recipe]) {
+        self.schemaVersion = schemaVersion
+        self.recipes = recipes
+    }
+}
+
+public enum RecipeFeedCodec {
+    public static let maximumBytes = 2_000_000
+    public enum FeedError: Error { case invalidCatalog }
+
+    public static func decode(_ data: Data) throws -> [Recipe] {
+        guard data.count <= maximumBytes else { throw FeedError.invalidCatalog }
+        let feed = try JSONDecoder().decode(RecipeFeed.self, from: data)
+        guard feed.schemaVersion == 1, (1...1000).contains(feed.recipes.count),
+              Set(feed.recipes.map(\.id)).count == feed.recipes.count else { throw FeedError.invalidCatalog }
+        for recipe in feed.recipes {
+            guard !recipe.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, recipe.title.count <= 200,
+                  (1...100).contains(recipe.baseServings), (1...1440).contains(recipe.prepTimeMinutes),
+                  (1...100).contains(recipe.instructions.count),
+                  recipe.instructions.allSatisfy({ !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && $0.count <= 4000 }),
+                  (1...100).contains(recipe.ingredients.count),
+                  Set(recipe.ingredients.map(\.id)).count == recipe.ingredients.count else { throw FeedError.invalidCatalog }
+            for ingredient in recipe.ingredients {
+                guard !ingredient.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, ingredient.name.count <= 200,
+                      ingredient.baseQuantity.isFinite, ingredient.baseQuantity > 0, ingredient.baseQuantity <= 1_000_000 else { throw FeedError.invalidCatalog }
+            }
+        }
+        return feed.recipes
+    }
+}
+
 public enum DietaryTag: String, CaseIterable, Codable, Sendable {
     case vegetarian = "Végétarien"
     case vegan = "Vegan"
