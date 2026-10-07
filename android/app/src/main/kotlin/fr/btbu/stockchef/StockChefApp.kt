@@ -10,10 +10,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,9 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -39,7 +43,25 @@ import java.time.ZoneOffset
 import java.util.Locale
 import kotlinx.serialization.encodeToString
 
-private val palette = lightColorScheme(primary = Color(0xFFA53759), secondary = Color(0xFF27735A), tertiary = Color(0xFF916C20), surface = Color(0xFFFCFAFB), background = Color(0xFFFCFAFB))
+private val palette = lightColorScheme(
+    primary = Color(0xFF17694C), onPrimary = Color.White,
+    primaryContainer = Color(0xFFE3F1E8), onPrimaryContainer = Color(0xFF153D2D),
+    secondary = Color(0xFFAC492D), onSecondary = Color.White,
+    secondaryContainer = Color(0xFFFFEDE6), onSecondaryContainer = Color(0xFF75301E),
+    tertiary = Color(0xFF426C83),
+    background = Color(0xFFF3F5F4), onBackground = Color(0xFF202B26),
+    surface = Color.White, onSurface = Color(0xFF202B26),
+    surfaceVariant = Color(0xFFEBEFEC), onSurfaceVariant = Color(0xFF59665F),
+    surfaceContainer = Color.White, surfaceContainerHigh = Color(0xFFF3F5F4),
+    surfaceContainerHighest = Color(0xFFEBEFEC), outline = Color(0xFF78857D),
+    outlineVariant = Color(0xFFDCE3DE), surfaceTint = Color.Transparent,
+)
+private val stockTypography = Typography(
+    titleLarge = Typography().titleLarge.copy(fontWeight = FontWeight.Bold, fontSize = 23.sp, letterSpacing = 0.sp),
+    titleMedium = Typography().titleMedium.copy(fontWeight = FontWeight.SemiBold, letterSpacing = 0.sp),
+    labelLarge = Typography().labelLarge.copy(letterSpacing = 0.sp),
+    labelMedium = Typography().labelMedium.copy(letterSpacing = 0.sp),
+)
 private fun quantity(value: Double) = String.format(Locale.FRANCE, "%.2f", value).trimEnd('0').trimEnd(',')
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,9 +90,9 @@ fun StockChefApp(model: StockViewModel = viewModel()) {
     val export = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri -> uri?.let(model::export) }
     val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(model::previewImport) }
     val backup = state.backup
-    MaterialTheme(colorScheme = palette) {
-        Scaffold(topBar = { TopAppBar(title = { Text(when (route) { "recipes" -> "Recettes"; "scan" -> "Tickets"; "shopping" -> "Courses"; "more" -> "Planning et réglages"; "item" -> "Aliment"; "recipe" -> "Recette"; else -> "StockChef" }) }, navigationIcon = { if (route !in roots) IconButton(onClick = { if (editing) discard = true else back() }, enabled = !state.busy) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Retour") } }) },
-            bottomBar = { if (route in roots) NavigationBar {
+    MaterialTheme(colorScheme = palette, typography = stockTypography, shapes = Shapes(small = RoundedCornerShape(8.dp), medium = RoundedCornerShape(8.dp))) {
+        Scaffold(containerColor = palette.background, topBar = { CenterAlignedTopAppBar(title = { Text(when (route) { "recipes" -> "Recettes"; "scan" -> "Tickets"; "shopping" -> "Courses"; "more" -> "Planning et réglages"; "item" -> "Aliment"; "recipe" -> "Recette"; else -> "StockChef" }, style = MaterialTheme.typography.titleLarge) }, colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = palette.surface), navigationIcon = { if (route !in roots) IconButton(onClick = { if (editing) discard = true else back() }, enabled = !state.busy) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Retour") } }) },
+            bottomBar = { if (route in roots) NavigationBar(containerColor = palette.surface, tonalElevation = 0.dp) {
                 listOf(Triple("stock", "Stock", Icons.Default.Kitchen), Triple("scan", "Tickets", Icons.Default.DocumentScanner), Triple("recipes", "Recettes", Icons.Default.RestaurantMenu), Triple("shopping", "Courses", Icons.Default.ShoppingBasket), Triple("more", "Plus", Icons.Default.MoreHoriz)).forEach { (destination, label, icon) -> NavigationBarItem(route == destination, { route = destination }, icon = { Icon(icon, label) }, label = { Text(label, maxLines = 1) }, enabled = !state.busy) }
             } }, floatingActionButton = { if (route == "stock" && backup != null && !state.busy) FloatingActionButton(onClick = { selectedId = ""; route = "item" }) { Icon(Icons.Default.Add, "Ajouter un aliment") } }) { padding ->
             Column(Modifier.fillMaxSize().padding(padding).imePadding()) {
@@ -121,13 +143,20 @@ fun StockChefApp(model: StockViewModel = viewModel()) {
     var urgent by rememberSaveable { mutableStateOf(false) }
     val shown = backup.inventory.filter { it.name.contains(search, true) && (storage == "Tous" || it.storageLocation.title == storage) && (!urgent || it.expires()) }.sortedBy { it.expiryDate ?: "9999" }
     LazyColumn(contentPadding = PaddingValues(16.dp, 8.dp, 16.dp, 96.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        item { Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { Column { Text("En stock", style = MaterialTheme.typography.labelMedium); Text(backup.inventory.size.toString(), style = MaterialTheme.typography.headlineMedium) }; Column(horizontalAlignment = Alignment.End) { Text("À utiliser bientôt", style = MaterialTheme.typography.labelMedium); Text(backup.inventory.count { it.expires() }.toString(), style = MaterialTheme.typography.headlineMedium, color = palette.primary) } } }
-        item { Field("Rechercher un aliment", search) { search = it } }
+        item { Row(Modifier.fillMaxWidth().padding(vertical = 16.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Column(Modifier.weight(1f)) { Icon(Icons.Default.Kitchen, null, tint = palette.primary); Text(backup.inventory.size.toString(), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold); Text("Aliments en stock", style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant) }
+            Column(Modifier.weight(1f)) { Icon(Icons.Default.Schedule, null, tint = palette.secondary); Text(backup.inventory.count { it.expires() }.toString(), style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = palette.secondary); Text("À utiliser bientôt", style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant) }
+        } }
+        item { OutlinedTextField(search, { search = it }, Modifier.fillMaxWidth(), placeholder = { Text("Rechercher un aliment") }, leadingIcon = { Icon(Icons.Default.Search, null) }, singleLine = true, shape = RoundedCornerShape(8.dp)) }
         item { Chips(listOf("Tous") + StorageLocation.entries.map { it.title }, storage) { storage = (listOf("Tous") + StorageLocation.entries.map { it.title })[it] } }
         item { FilterChip(urgent, { urgent = !urgent }, label = { Text("À utiliser sous 3 jours") }, leadingIcon = { Icon(Icons.Default.Schedule, null, Modifier.size(18.dp)) }) }
-        if (shown.isEmpty()) item { Text("Aucun aliment.", Modifier.padding(vertical = 24.dp)) }
-        items(shown, key = { it.id }) { item -> OutlinedCard(onClick = { open(item) }, modifier = Modifier.fillMaxWidth(), shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)) {
-            Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) { Text(item.name, fontWeight = FontWeight.SemiBold); Text("${quantity(item.quantity)} ${item.unit.label} · ${item.storageLocation.title}${if (item.isLeftover) " · Restes" else ""}"); item.expiryDate?.let { Text("Date : ${it.take(10)}", style = MaterialTheme.typography.labelMedium, color = if (item.expires()) palette.primary else MaterialTheme.colorScheme.onSurfaceVariant) } }
+        if (shown.isEmpty()) item { Column(Modifier.fillMaxWidth().padding(vertical = 40.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) { Icon(Icons.Default.Kitchen, null, Modifier.size(40.dp), tint = palette.onSurfaceVariant); Text(if (backup.inventory.isEmpty()) "Votre stock est vide" else "Aucun aliment correspondant", style = MaterialTheme.typography.titleMedium) } }
+        items(shown, key = { it.id }) { item -> Card(onClick = { open(item) }, modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = palette.surface), shape = RoundedCornerShape(8.dp)) {
+            Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                Surface(color = if (item.expires()) palette.secondaryContainer else palette.primaryContainer, shape = RoundedCornerShape(8.dp)) { Icon(if (item.isLeftover) Icons.Default.Restaurant else Icons.Default.Kitchen, null, Modifier.padding(10.dp).size(24.dp), tint = if (item.expires()) palette.secondary else palette.primary) }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) { Text(item.name, style = MaterialTheme.typography.titleMedium); Text("${quantity(item.quantity)} ${item.unit.label} · ${item.storageLocation.title}${if (item.isLeftover) " · Restes" else ""}", style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant); item.expiryDate?.let { Text("Date : ${it.take(10)}", style = MaterialTheme.typography.labelMedium, color = if (item.expires()) palette.secondary else palette.onSurfaceVariant) } }
+                Icon(Icons.Default.ChevronRight, null, tint = palette.onSurfaceVariant)
+            }
         } }
     }
 }
@@ -154,18 +183,29 @@ fun StockChefApp(model: StockViewModel = viewModel()) {
     if (confirm) AlertDialog(onDismissRequest = { confirm = false }, title = { Text("Supprimer cet aliment ?") }, dismissButton = { TextButton(onClick = { confirm = false }) { Text("Annuler") } }, confirmButton = { TextButton(onClick = { onDelete(item.id); confirm = false }) { Text("Supprimer") } })
 }
 @Composable private fun Recipes(backup: Backup, recipes: List<Recipe>, open: (Recipe) -> Unit) {
+    var search by rememberSaveable { mutableStateOf("") }
     var course by rememberSaveable { mutableStateOf("Tous") }
     var tag by rememberSaveable { mutableStateOf("Tous") }
     var allergen by rememberSaveable { mutableStateOf("Aucun") }
-    val matches = recipes.filter { (course == "Tous" || it.course.title == course) && (tag == "Tous" || tag in it.dietaryTags) && (allergen == "Aucun" || allergen !in it.allergens) }.map { RecipeMatcher.match(it, backup.inventory, 2) }.sortedWith(compareByDescending<RecipeMatch> { it.score }.thenBy { it.recipe.prepTimeMinutes })
+    val matches = recipes.filter { (search.isBlank() || it.title.contains(search, true) || it.ingredients.any { ingredient -> ingredient.name.contains(search, true) }) && (course == "Tous" || it.course.title == course) && (tag == "Tous" || tag in it.dietaryTags) && (allergen == "Aucun" || allergen !in it.allergens) }.map { RecipeMatcher.match(it, backup.inventory, 2) }.sortedWith(compareByDescending<RecipeMatch> { it.score }.thenBy { it.recipe.prepTimeMinutes })
     LazyColumn(contentPadding = PaddingValues(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        item { OutlinedTextField(search, { search = it }, Modifier.fillMaxWidth(), placeholder = { Text("Recette ou ingrédient") }, leadingIcon = { Icon(Icons.Default.Search, null) }, singleLine = true, shape = RoundedCornerShape(8.dp)) }
         item { Chips(listOf("Tous") + RecipeCourse.entries.map { it.title }, course) { course = (listOf("Tous") + RecipeCourse.entries.map { it.title })[it] } }
         item { Chips(listOf("Tous", "Végétarien", "Vegan", "Sans gluten"), tag) { tag = listOf("Tous", "Végétarien", "Vegan", "Sans gluten")[it] } }
         item { Text("Exclure un allergène", style = MaterialTheme.typography.labelMedium); Chips(listOf("Aucun", "Gluten", "Lait", "Œuf", "Poisson", "Fruits à coque"), allergen) { allergen = listOf("Aucun", "Gluten", "Lait", "Œuf", "Poisson", "Fruits à coque")[it] } }
-        items(matches, key = { it.recipe.id }) { match -> OutlinedCard(onClick = { open(match.recipe) }, modifier = Modifier.fillMaxWidth(), shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp)) { Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) { Text(match.recipe.title, fontWeight = FontWeight.SemiBold); Text("${match.recipe.prepTimeMinutes} min · ${match.recipe.course.title}", style = MaterialTheme.typography.bodyMedium); Text(if (match.cookable) "Prêt à cuisiner" else "${match.missing.size} ingrédient(s) manquant(s)", color = if (match.cookable) palette.secondary else palette.primary, style = MaterialTheme.typography.labelMedium) } } }
+        item { Text("${matches.size} recettes", style = MaterialTheme.typography.labelMedium, color = palette.onSurfaceVariant, modifier = Modifier.padding(vertical = 8.dp)) }
+        if (matches.isEmpty()) item { Text("Aucune recette correspondante", Modifier.padding(vertical = 24.dp)) }
+        items(matches, key = { it.recipe.id }) { match -> Card(onClick = { open(match.recipe) }, modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = palette.surface), shape = RoundedCornerShape(8.dp)) {
+            Row(Modifier.padding(16.dp), horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
+                Surface(color = palette.primaryContainer, shape = RoundedCornerShape(8.dp)) { Icon(Icons.Default.RestaurantMenu, null, Modifier.padding(10.dp).size(24.dp), tint = palette.primary) }
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) { Text(match.recipe.title, style = MaterialTheme.typography.titleMedium); Text("${match.recipe.prepTimeMinutes} min · ${match.recipe.course.title}", style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant); Text(if (match.cookable) "Prêt à cuisiner" else "${match.missing.size} ingrédient(s) manquant(s)", color = if (match.cookable) palette.primary else palette.secondary, style = MaterialTheme.typography.labelMedium) }
+                Icon(Icons.Default.ChevronRight, null, tint = palette.onSurfaceVariant)
+            }
+        } }
     }
 }
 @Composable private fun RecipeDetail(recipe: Recipe, backup: Backup, busy: Boolean, onCook: (Int) -> Unit, onMissing: (Int) -> Unit, onPlan: (MealPlanEntry) -> Unit) {
+    val uriHandler = LocalUriHandler.current
     var servings by rememberSaveable(recipe.id) { mutableIntStateOf(2) }
     var confirm by remember { mutableStateOf(false) }
     var plan by remember { mutableStateOf(false) }
@@ -179,6 +219,14 @@ fun StockChefApp(model: StockViewModel = viewModel()) {
         recipe.scaled(servings).forEach { Text("${it.name} · ${quantity(it.baseQuantity)} ${it.unit.label}${if (it.isPantryStaple) " · Fond de placard" else ""}") }
         Section("Préparation")
         recipe.instructions.forEachIndexed { index, instruction -> Text("${index + 1}. $instruction") }
+        recipe.source?.let { source ->
+            HorizontalDivider()
+            Section("Source et licence")
+            Text(source.attribution, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
+            Text(source.changes, style = MaterialTheme.typography.bodySmall, color = palette.onSurfaceVariant)
+            TextButton(onClick = { uriHandler.openUri(source.url) }) { Icon(Icons.AutoMirrored.Filled.OpenInNew, null, Modifier.size(18.dp)); Spacer(Modifier.width(8.dp)); Text(source.name) }
+            TextButton(onClick = { uriHandler.openUri(source.licenseURL) }) { Icon(Icons.Default.Info, null, Modifier.size(18.dp)); Spacer(Modifier.width(8.dp)); Text(source.license) }
+        }
         Button(onClick = { confirm = true }, enabled = !busy && match.cookable, modifier = Modifier.fillMaxWidth()) { Icon(Icons.Default.Restaurant, null); Spacer(Modifier.width(8.dp)); Text("Cuisiner et déduire du stock") }
         if (!match.cookable) OutlinedButton(onClick = { onMissing(servings) }, enabled = !busy, modifier = Modifier.fillMaxWidth()) { Icon(Icons.Default.ShoppingBasket, null); Spacer(Modifier.width(8.dp)); Text("Ajouter les manquants aux courses") }
         OutlinedButton(onClick = { plan = true }, enabled = !busy, modifier = Modifier.fillMaxWidth()) { Icon(Icons.Default.CalendarMonth, null); Spacer(Modifier.width(8.dp)); Text("Planifier ce repas") }
@@ -247,6 +295,6 @@ private data class ReceiptDraft(val item: InventoryItem, val name: String = item
         item { OutlinedButton(onClick = onExport, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Icon(Icons.Default.FileDownload, null); Text("Exporter la sauvegarde JSON") } }
         item { OutlinedButton(onClick = onImport, enabled = !state.busy, modifier = Modifier.fillMaxWidth()) { Icon(Icons.Default.FileUpload, null); Text("Importer une sauvegarde") } }
         item { TextButton(onClick = onPrevious, enabled = !state.busy) { Icon(Icons.Default.History, null); Text("Données avant import") } }
-        item { HorizontalDivider(); Text("Google Play, sauvegarde chiffrée et rappels : non disponibles dans cette version.", style = MaterialTheme.typography.bodySmall); Text("StockChef Android 0.1.0", style = MaterialTheme.typography.labelSmall) }
+        item { HorizontalDivider(); Text("Google Play, sauvegarde chiffrée et rappels : non disponibles dans cette version.", style = MaterialTheme.typography.bodySmall); Text("StockChef Android 0.2.0", style = MaterialTheme.typography.labelSmall) }
     }
 }

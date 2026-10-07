@@ -66,6 +66,14 @@ struct RecipeDetailView: View {
                 Section("Allergènes") { Text(match.recipe.allergens.map(\.rawValue).sorted().joined(separator: " · ")).foregroundStyle(Color("Terracotta")); Text("Vérifiez toujours les étiquettes de vos produits : les recettes ne remplacent pas les informations fabricant.").font(.footnote).foregroundStyle(.secondary) }
             }
             Section("Préparation") { ForEach(Array(match.recipe.instructions.enumerated()), id: \.offset) { index, instruction in Label(instruction, systemImage: "\(index + 1).circle") } }
+            if let source = match.recipe.source {
+                Section("Source et licence") {
+                    Text(source.attribution).font(.footnote).foregroundStyle(.secondary)
+                    Text(source.changes).font(.footnote).foregroundStyle(.secondary)
+                    if let url = URL(string: source.url) { Link(destination: url) { Label(source.name, systemImage: "arrow.up.right.square") } }
+                    if let url = URL(string: source.licenseURL) { Link(destination: url) { Label(source.license, systemImage: "info.circle") } }
+                }
+            }
             Section("Sécurité alimentaire") { Label("Respectez les dates, la chaîne du froid et les températures de cuisson. En cas de doute sur un aliment, ne le consommez pas.", systemImage: "shield.lefthalf.filled").font(.footnote).foregroundStyle(.secondary) }
         }
         .navigationTitle(match.recipe.title)

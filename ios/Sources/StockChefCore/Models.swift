@@ -145,6 +145,24 @@ public struct RecipeIngredient: Identifiable, Codable, Hashable, Sendable {
     }
 }
 
+public struct RecipeSource: Codable, Hashable, Sendable {
+    public var name: String
+    public var url: String
+    public var license: String
+    public var licenseURL: String
+    public var attribution: String
+    public var changes: String
+
+    public init(name: String, url: String, license: String, licenseURL: String, attribution: String, changes: String) {
+        self.name = name
+        self.url = url
+        self.license = license
+        self.licenseURL = licenseURL
+        self.attribution = attribution
+        self.changes = changes
+    }
+}
+
 public struct Recipe: Identifiable, Codable, Hashable, Sendable {
     public let id: UUID
     public var title: String
@@ -155,8 +173,9 @@ public struct Recipe: Identifiable, Codable, Hashable, Sendable {
     public var dietaryTags: Set<DietaryTag>
     public var allergens: Set<Allergen>
     public var course: RecipeCourse
+    public var source: RecipeSource?
 
-    public init(id: UUID = UUID(), title: String, baseServings: Int, prepTimeMinutes: Int, instructions: [String], ingredients: [RecipeIngredient], dietaryTags: Set<DietaryTag> = [], allergens: Set<Allergen> = [], course: RecipeCourse = .main) {
+    public init(id: UUID = UUID(), title: String, baseServings: Int, prepTimeMinutes: Int, instructions: [String], ingredients: [RecipeIngredient], dietaryTags: Set<DietaryTag> = [], allergens: Set<Allergen> = [], course: RecipeCourse = .main, source: RecipeSource? = nil) {
         self.id = id
         self.title = title
         self.baseServings = baseServings
@@ -166,6 +185,7 @@ public struct Recipe: Identifiable, Codable, Hashable, Sendable {
         self.dietaryTags = dietaryTags
         self.allergens = allergens
         self.course = course
+        self.source = source
     }
 
     public func scaledIngredients(for servings: Int) -> [RecipeIngredient] {
@@ -202,9 +222,21 @@ public enum RecipeFeedCodec {
     public static func decode(_ data: Data) throws -> [Recipe] {
         guard data.count <= maximumBytes else { throw FeedError.invalidCatalog }
         let feed = try JSONDecoder().decode(RecipeFeed.self, from: data)
-        guard feed.schemaVersion == 1, (1...1000).contains(feed.recipes.count),
+        guard (1...2).contains(feed.schemaVersion), (1...1000).contains(feed.recipes.count),
               Set(feed.recipes.map(\.id)).count == feed.recipes.count else { throw FeedError.invalidCatalog }
         for recipe in feed.recipes {
+            if let source = recipe.source {
+                guard feed.schemaVersion == 2 else { throw FeedError.invalidCatalog }
+                let links = [source.url, source.licenseURL]
+                guard !source.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, source.name.count <= 200,
+                      !source.license.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, source.license.count <= 100,
+                      !source.attribution.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, source.attribution.count <= 1000,
+                      !source.changes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, source.changes.count <= 1000,
+                      links.allSatisfy({ value in
+                          guard value.count <= 2000, let url = URL(string: value) else { return false }
+                          return url.scheme == "https" && !(url.host ?? "").isEmpty && url.user == nil
+                      }) else { throw FeedError.invalidCatalog }
+            }
             guard !recipe.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, recipe.title.count <= 200,
                   (1...100).contains(recipe.baseServings), (1...1440).contains(recipe.prepTimeMinutes),
                   (1...100).contains(recipe.instructions.count),

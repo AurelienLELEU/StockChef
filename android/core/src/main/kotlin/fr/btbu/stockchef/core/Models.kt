@@ -37,10 +37,12 @@ fun normalized(text: String): String = Normalizer.normalize(text.lowercase(Local
     fun expires(days: Long = 3): Boolean = expiryDate?.let { Instant.parse(it) <= Instant.parse(date(days)) } ?: false
 }
 @Serializable data class RecipeIngredient(val id: String = id(), val name: String, val baseQuantity: Double, val unit: FoodUnit, val isPantryStaple: Boolean = false)
+@Serializable data class RecipeSource(val name: String, val url: String, val license: String, val licenseURL: String, val attribution: String, val changes: String)
 @Serializable data class Recipe(
     val id: String = id(), val title: String, val baseServings: Int = 2, val prepTimeMinutes: Int,
     val instructions: List<String>, val ingredients: List<RecipeIngredient>,
     val dietaryTags: Set<String> = emptySet(), val allergens: Set<String> = emptySet(), val course: RecipeCourse = RecipeCourse.MAIN,
+    val source: RecipeSource? = null,
 ) {
     fun scaled(servings: Int): List<RecipeIngredient> {
         require(servings in 1..100 && baseServings > 0)

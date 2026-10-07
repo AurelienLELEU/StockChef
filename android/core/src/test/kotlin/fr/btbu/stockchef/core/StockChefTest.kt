@@ -76,7 +76,7 @@ class StockChefTest {
         fun decode(recipes: List<Recipe>, version: Int = 1) = RecipeFeedCodec.decode(BackupCodec.json.encodeToString(RecipeFeed(version, recipes)))
         assertEquals(RecipeCatalog.recipes, decode(RecipeCatalog.recipes))
         assertFailsWith<IllegalArgumentException> { decode(emptyList()) }
-        assertFailsWith<IllegalArgumentException> { decode(RecipeCatalog.recipes, 2) }
+        assertFailsWith<IllegalArgumentException> { decode(RecipeCatalog.recipes, 3) }
         val first = RecipeCatalog.recipes.first()
         assertFailsWith<IllegalArgumentException> { decode(listOf(first, first)) }
         assertFailsWith<IllegalArgumentException> { decode(listOf(first.copy(baseServings = 0))) }
@@ -87,5 +87,15 @@ class StockChefTest {
         val recipes = RecipeFeedCodec.decode(java.io.File(path).readText(Charsets.UTF_8))
         assertTrue(recipes.isNotEmpty())
         assertEquals(recipes.size, recipes.map { it.id }.distinct().size)
+    }
+    @Test fun recipeAttributionSurvivesAndUnsafeSourceIsRejected() {
+        val source = RecipeSource("Wikilivres", "https://fr.wikibooks.org/wiki/Livre_de_cuisine/Ratatouille", "CC BY-SA 4.0", "https://creativecommons.org/licenses/by-sa/4.0/", "Contributeurs de Wikilivres", "Etapes adaptees")
+        val recipe = RecipeCatalog.recipes.first().copy(source = source)
+        fun decode(value: Recipe) = RecipeFeedCodec.decode(BackupCodec.json.encodeToString(RecipeFeed(2, listOf(value)))).single()
+        assertEquals(source, decode(recipe).source)
+        assertFailsWith<IllegalArgumentException> { RecipeFeedCodec.decode(BackupCodec.json.encodeToString(RecipeFeed(1, listOf(recipe)))) }
+        assertFailsWith<IllegalArgumentException> { decode(recipe.copy(source = source.copy(url = "javascript:alert(1)"))) }
+        assertFailsWith<IllegalArgumentException> { decode(recipe.copy(source = source.copy(licenseURL = "http://example.com"))) }
+        assertFailsWith<IllegalArgumentException> { decode(recipe.copy(source = source.copy(attribution = ""))) }
     }
 }

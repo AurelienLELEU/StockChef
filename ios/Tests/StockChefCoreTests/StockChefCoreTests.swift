@@ -2,11 +2,20 @@ import XCTest
 @testable import StockChefCore
 
 final class StockChefCoreTests: XCTestCase {
+    func testRecipeAttributionSurvivesAndUnsafeSourceIsRejected() throws {
+        var recipe = SampleData.recipes[0]
+        recipe.source = RecipeSource(name: "Wikilivres", url: "https://fr.wikibooks.org/wiki/Livre_de_cuisine/Ratatouille", license: "CC BY-SA 4.0", licenseURL: "https://creativecommons.org/licenses/by-sa/4.0/", attribution: "Contributeurs de Wikilivres", changes: "Etapes adaptees")
+        let encoder = JSONEncoder()
+        XCTAssertEqual(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(schemaVersion: 2, recipes: [recipe]))).first?.source, recipe.source)
+        XCTAssertThrowsError(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(recipes: [recipe]))))
+        recipe.source?.url = "javascript:alert(1)"
+        XCTAssertThrowsError(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(schemaVersion: 2, recipes: [recipe]))))
+    }
     func testRecipeFeedAcceptsCatalogAndRejectsInvalidUpdates() throws {
         let recipes = SampleData.recipes
         let encoder = JSONEncoder()
         XCTAssertEqual(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(recipes: recipes))), recipes)
-        XCTAssertThrowsError(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(schemaVersion: 2, recipes: recipes))))
+        XCTAssertThrowsError(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(schemaVersion: 3, recipes: recipes))))
         XCTAssertThrowsError(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(recipes: []))))
         XCTAssertThrowsError(try RecipeFeedCodec.decode(encoder.encode(RecipeFeed(recipes: [recipes[0], recipes[0]]))))
         var invalid = recipes[0]

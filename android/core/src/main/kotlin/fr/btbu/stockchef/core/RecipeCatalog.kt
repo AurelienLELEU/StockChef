@@ -14,6 +14,10 @@ object RecipeFeedCodec {
     private val uuid = Regex("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}")
     private val tags = setOf("Végétarien", "Vegan", "Sans gluten")
     private val allergens = setOf("Gluten", "Lait", "Œuf", "Poisson", "Fruits à coque", "Soja", "Arachides", "Céleri", "Moutarde", "Sésame", "Sulfites", "Lupin", "Mollusques", "Crustacés")
+    private fun https(value: String): Boolean = value.length <= 2000 && runCatching {
+        val uri = java.net.URI(value)
+        uri.scheme == "https" && !uri.host.isNullOrBlank() && uri.userInfo == null
+    }.getOrDefault(false)
     fun decode(text: String): List<Recipe> {
         require(text.toByteArray(Charsets.UTF_8).size <= MAX_BYTES)
         val tree = BackupCodec.json.parseToJsonElement(text).jsonObject
@@ -25,7 +29,7 @@ object RecipeFeedCodec {
             }
         }
         val feed = BackupCodec.json.decodeFromString<RecipeFeed>(text)
-        require(tree.containsKey("schemaVersion") && feed.schemaVersion == 1 && feed.recipes.size in 1..1000)
+        require(tree.containsKey("schemaVersion") && feed.schemaVersion in 1..2 && feed.recipes.size in 1..1000)
         require(feed.recipes.map { it.id.lowercase() }.distinct().size == feed.recipes.size)
         feed.recipes.forEach { recipe ->
             require(uuid.matches(recipe.id) && recipe.title.isNotBlank() && recipe.title.length <= 200)
@@ -33,6 +37,12 @@ object RecipeFeedCodec {
             require(recipe.instructions.size in 1..100 && recipe.instructions.all { it.isNotBlank() && it.length <= 4000 })
             require(recipe.ingredients.size in 1..100 && recipe.ingredients.map { it.id.lowercase() }.distinct().size == recipe.ingredients.size)
             require(tags.containsAll(recipe.dietaryTags) && allergens.containsAll(recipe.allergens))
+            recipe.source?.let { source ->
+                require(feed.schemaVersion == 2)
+                require(source.name.isNotBlank() && source.name.length <= 200 && source.license.isNotBlank() && source.license.length <= 100)
+                require(source.attribution.isNotBlank() && source.attribution.length <= 1000 && source.changes.isNotBlank() && source.changes.length <= 1000)
+                require(https(source.url) && https(source.licenseURL))
+            }
             recipe.ingredients.forEach { require(uuid.matches(it.id) && it.name.isNotBlank() && it.name.length <= 200 && it.baseQuantity.isFinite() && it.baseQuantity > 0 && it.baseQuantity <= 1_000_000) }
         }
         return feed.recipes
